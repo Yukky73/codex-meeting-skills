@@ -1,0 +1,7 @@
+interface:
+  display_name: "Meeting Follow-up Runner"
+  short_description: "議事録化からHubSpot・Gmail・Slack下書きまで直列実行"
+  default_prompt: "Use $meeting-run-followup to update the specified meeting minutes from its matching transcript, then create the Gmail draft, HubSpot meeting log, and configured Slack channel Slack draft in sequence."
+
+policy:
+  allow_implicit_invocation: true

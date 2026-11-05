@@ -1,0 +1,7 @@
+interface:
+  display_name: "Gmail 面談後フォローメール"
+  short_description: "議事録を基に初回面談後メールをGmail下書きへ作成"
+  default_prompt: "Use $meeting-create-gmail-draft to create a Gmail draft from this completed meeting minutes file."
+
+policy:
+  allow_implicit_invocation: true

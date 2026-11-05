@@ -1,0 +1,7 @@
+interface:
+  display_name: "Meeting SR Biz Poster"
+  short_description: "事前情報以外の議事録を configured Slack channel に転記"
+  default_prompt: "Use $meeting-post-slack to prepare an exact configured Slack channel post from the specified completed meeting minutes, excluding only its 事前情報 section, then ask for approval before posting it."
+
+policy:
+  allow_implicit_invocation: true

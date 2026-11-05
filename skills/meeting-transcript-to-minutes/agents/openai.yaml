@@ -1,0 +1,7 @@
+interface:
+  display_name: "Transcript to Minutes"
+  short_description: "tldv の最新文字起こしから案件原本の議事録と次アクションを更新"
+  default_prompt: "Use $meeting-transcript-to-minutes to read the specified 面談準備 source file, retrieve the latest matching tldv meeting transcript by company name, and update that source file's minutes."
+
+policy:
+  allow_implicit_invocation: true

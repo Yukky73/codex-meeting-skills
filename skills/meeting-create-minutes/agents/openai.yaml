@@ -1,0 +1,7 @@
+interface:
+  display_name: "HubSpot Meeting Minutes"
+  short_description: "HubSpotの当日面談から未作成の議事録原本を作成"
+  default_prompt: "Use $meeting-create-minutes to create missing meeting-minute files for my HubSpot deals scheduled today."
+
+policy:
+  allow_implicit_invocation: true

@@ -19,25 +19,64 @@
 
 ## 導入
 
-Python 3 と Git を利用します。このリポジトリを取得し、面談原本を置く作業ワークスペースへ6スキルをまとめてリンクします。
+Codex で作業する既存のフォルダと、Python 3.10 以上を用意します。インストーラは Python 標準ライブラリだけを使い、管理者権限やシンボリックリンク権限を必要としない **コピー方式** を標準にします。macOS / Linux / Windows のファイルパスに対応する設計です。Windows実機と各OS上のCodexでの認識は未検証です。
 
-```bash
-git clone <REPOSITORY_URL>
+### 1. 共有版を取得
+
+GitHub のこのページで **Code → HTTPS** からURLをコピーし、次の `REPOSITORY_URL` をその値へ置き換えます。Git が必要です。Git を使わない場合は **Code → Download ZIP** で取得して展開し、展開先をターミナルで開いて手順2へ進めます。
+
+```text
+git clone "REPOSITORY_URL" codex-meeting-skills
 cd codex-meeting-skills
-python3 scripts/install.py --workspace /path/to/workspace --dry-run
-python3 scripts/install.py --workspace /path/to/workspace
 ```
 
-`/path/to/workspace` は既存の作業フォルダへ置き換えてください。インストーラは `.agents/skills/` にシンボリックリンクを作り、既存のスキルは上書きしません。依存関係があるため6スキルを一緒に導入します。リンク元となる取得フォルダは移動・削除しないでください。
+### 2. 作業フォルダへ導入
 
-この配置とシンボリックリンクの利用は [OpenAI 公式ドキュメント](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills) に準拠します。認識されない場合は Codex を再起動してください。
+`/path/to/workspace` または `C:\path\to\workspace` は、面談原本を置く既存の作業フォルダへ置き換えます。空白・日本語を含むパスも引用符で囲んでください。dry-run は予定を表示するだけで書き込みません。
 
-## 初回設定
+macOS / Linux:
 
-1. `meeting-skills.example.md` を作業ワークスペースの `.meeting-skills.local.md` へコピーし、利用者本人のアカウント・署名・報告先・送付PDFのパスを記入します。[共通設定](skills/meeting-run-followup/references/configuration.md) に段階別の必須項目があります。
-2. 作業ワークスペース側の `.gitignore` または `.git/info/exclude` に `.meeting-skills.local.md` と `面談準備/` を追加します。このリポジトリの ignore 設定は別ワークスペースへ自動適用されません。顧客記録を社内の専用リポジトリで管理する場合は、その管理ルールに従ってください。
-3. Codex で利用者本人の HubSpot、Gmail、Slack、tldv を接続します。文字起こしを明示する場合は tldv 接続を省略できます。
-4. HubSpot の利用権限・カスタムプロパティ、Gmail の PDF 添付・下書き再取得、Slack の下書き作成・再取得が利用可能か確認します。アプリ接続はこのリポジトリやインストーラでは設定しません。
+```bash
+python3 --version
+python3 scripts/install.py --workspace "/path/to/workspace" --dry-run
+python3 scripts/install.py --workspace "/path/to/workspace"
+```
+
+Windows（PowerShell）:
+
+```powershell
+py -3 --version
+py -3 scripts/install.py --workspace "C:\path\to\workspace" --dry-run
+py -3 scripts/install.py --workspace "C:\path\to\workspace"
+```
+
+`py` がなく `python --version` で Python 3.10 以上を確認できる場合は、`py -3` を `python` に置き換えます。Python がない場合は利用端末の社内手順で導入してください。
+
+6スキルを作業フォルダの `.agents/skills/` へまとめてコピーします。共通参照と空の議事録テンプレートも含まれ、導入後は取得元フォルダを移動しても動作します。同じ内容への再実行は変更せず終了し、異なる内容の既存スキルや既存設定は上書きしません。権限エラーの場合は書き込み可能な作業フォルダを指定してください。
+
+取得元の更新を即座に反映したい場合だけ `--mode link` を指定できます。この方式は取得元フォルダの保持とリンク作成権限が必要です。Windowsの権限設定を変更する必要はなく、リンクできない場合は標準の `--mode copy` を使ってください。
+
+コピー版は `git pull` だけでは更新されません。新版導入時は、既存の `.agents/skills/meeting-*` を別の場所へバックアップし、差分と独自変更を確認してから新版を導入します。`.meeting-skills.local.md` と面談原本は保持してください。旧リンク版は取得元の更新を参照するため、そのまま使えます。
+
+### 3. 利用者本人の設定とアプリ接続
+
+1. 同梱の `meeting-skills.example.md` を作業フォルダ直下の `.meeting-skills.local.md` へコピーします。既存ファイルがあれば保持し、不足項目だけ追記します。メール・署名・送付PDFの絶対パスを利用者本人の値で記入します。[共通設定](skills/meeting-run-followup/references/configuration.md) に段階別の必須項目があります。
+2. 作業フォルダ側の `.gitignore` または `.git/info/exclude` に `.meeting-skills.local.md` と `面談準備/` を追加します。このリポジトリの ignore 設定は別フォルダへ自動適用されません。社内専用リポジトリで顧客記録を管理する場合は、その管理ルールに従ってください。
+3. Codex で利用者本人の HubSpot、Gmail、Slack、tldv を接続します。文字起こしを明示する場合は tldv を省略できます。Slack のワークスペース・チャンネル名・IDは、接続後に Codex へ「設定する報告先のIDを読み取りだけで確認して」と依頼して取得できます。推測したIDを記入しないでください。
+4. HubSpotのカスタムプロパティ・権限、GmailのファイルパスによるPDF添付とメッセージ再取得、Slackの下書き作成機能を確認します。アプリ接続・権限はインストーラでは設定しません。
+
+### 4. 書き込まずに初回確認
+
+作業フォルダを Codex で開き、必要なら再起動してから次を依頼します。`.agents/skills/` とリンクの発見規則は [OpenAI 公式ドキュメント](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills) を参照してください。
+
+```text
+面談スキル6件が認識されているか、共通設定・テンプレートを読めるか確認して。
+ローカル設定の不足、接続済みアプリの利用可否、添付PDFの読み取り可否を確認して。
+メールアドレスや署名の全文は報告せず、設定済みかどうかだけ示して。
+面談原本の更新や外部サービスへの書き込みは行わないで。
+```
+
+面談原本作成だけなら Gmail・Slack の設定を先に完了させる必要はありません。一括フォローは全段階の設定・機能を、外部書き込みの前に確認します。
 
 ## 使い方
 
@@ -53,12 +92,16 @@ $meeting-run-followup 面談準備/YYMMDD_会社名.md を文字起こしから�
 
 外部書き込みの前に、送信元・宛先・件名・本文・添付一覧、HubSpot 取引、Slack ワークスペース・チャンネルと本文をまとめて提示し、1回の明示承認を取得します。承認後は追加確認を挟まず直列実行し、失敗した段階で停止します。Gmail 送信と Slack 投稿、既存データの更新は行いません。HubSpot には新しい活動ログが作成されます。
 
+Slackは現行コネクタで下書き本文を再取得できないため、作成後は **作成済み・表示確認待ち** になります。返されたチャンネルURLから利用者が下書きの本文・見出し・空行を確認し、一致したと伝えた時点で全工程を完了とします。画面確認を省略して検証済み成功とは扱いません。
+
 単独実行する子スキルでも、外部書き込みは対象・内容の承認後に行います。接続機能が不足する場合はブラウザや CLI を代替経路にせず停止します。
 
 ## 保守と公開範囲
 
 共有版の更新はこのリポジトリの `skills/` を編集してください。個人用スキルの正本とは独立した公開用の派生版です。更新時は差分を確認し、個人設定・署名・顧客情報・送付資料を取り込まないでください。空の議事録テンプレートは `meeting-create-minutes/assets/` に同梱しています。
 
-この公開版では事前情報の除外見出しを現行テンプレートと整合させ、固定された送信者・添付パス・報告チャンネルをローカル設定へ置き換えています。元の業務ルール（推測禁止、重複防止、承認、直列実行、失敗時停止、改行・添付の再取得検証）を引き継いでいます。
+この公開版では事前情報の除外見出しを現行テンプレートと整合させ、固定された送信者・添付パス・報告チャンネルをローカル設定へ置き換えています。元の業務ルール（推測禁止、重複防止、承認、直列実行、失敗時停止、Gmail・HubSpotの再取得検証、Slackの原文・改行の表示確認）を引き継いでいます。
 
 公開版での接続先への実書き込みテストは実施していません。導入後は各自の権限・設定を確認し、承認画面で対象と内容を確認して利用してください。
+
+独立レビューの3指摘と検証方法の変更は [互換性の修正記録](docs/compatibility.md) に記載しています。
